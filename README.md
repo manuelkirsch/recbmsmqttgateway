@@ -1,2 +1,2 @@
-# recbms
-websocket forwarding to mqtt
+# recbmsmqttgateway
+rec bms websocket forwarding to mqtt

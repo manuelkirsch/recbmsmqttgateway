@@ -11,6 +11,7 @@ username = os.environ['MY_USER']
 password = os.environ['MY_PASS']
 broker = os.environ['MY_BROKER']
 port = int(os.environ['MY_PORT'])
+recip = int(os.environ['REC_IP'])
 
 from paho.mqtt import client as mqtt_client
 
