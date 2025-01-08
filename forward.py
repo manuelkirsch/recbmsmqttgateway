@@ -55,6 +55,7 @@ def on_disconnect(client, userdata, rc):
 def on_message(ws, message):
     jsonData = json.loads(message)
     if jsonData["type"] == 'status':
+        # status message
         result = client.publish("rec/bms/soc", jsonData["bms_array"]["master"]["soc"])
         result = client.publish("rec/bms/ibat", jsonData["bms_array"]["master"]["ibat"])
         result = client.publish("rec/bms/vbat", jsonData["bms_array"]["master"]["vbat"])
@@ -72,27 +73,26 @@ def on_message(ws, message):
         result = client.publish("recbms/bms_array/master/soh", jsonData["bms_array"]["master"]["soh"])
 
         for index, slave in enumerate(jsonData["bms_array"]["slave"]):
-            # slave 0
-            result = client.publish("recbms/bms_array/slave/"+index+"/address", slave["address"])
-            result = client.publish("recbms/bms_array/slave/"+index+"/st_temp", slave["st_temp"])
-            result = client.publish("recbms/bms_array/slave/"+index+"/temp_bms", slave["temp_bms"])
-            result = client.publish("recbms/bms_array/slave/"+index+"/st_celic", slave["st_celic"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/address", slave["address"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_temp", slave["st_temp"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp_bms", slave["temp_bms"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_celic", slave["st_celic"])
             
             for tempindex, temp in enumerate(slave["temp"]):
-                result = client.publish("recbms/bms_array/slave/"+index+"/temp/"+tempindex, temp)
-            for resindex, res in enumerate(slave["res"]):
-                result = client.publish("recbms/bms_array/slave/"+index+"/res/"+resindex, res)
-            for napindex, nap in enumerate(slave["nap"]):
-                result = client.publish("recbms/bms_array/slave/"+index+"/nap/"+napindex, nap)
+                result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp/"+str(tempindex), temp)
 
-        # result: [0, 1]
+            for resindex, res in enumerate(slave["res"]):
+                result = client.publish("recbms/bms_array/slave/"+str(index)+"/res/"+str(resindex), res)
+
+            for napindex, nap in enumerate(slave["nap"]):
+                result = client.publish("recbms/bms_array/slave/"+str(index)+"/nap/"+str(napindex), nap)
+
         status = result[0]
-        if status == 0:
-            print(f"Send status message to topic `{topic}`")
-        else:
+        if status != 0:
             print(f"Failed to send message to topic {topic}")
-    else:
-        print(f"Ignored settings message")
+    #else:
+        # settings message
+        #print(f"Ignored settings message")
 
 def on_error(ws, error):
     print(error)
@@ -111,7 +111,7 @@ if __name__ == "__main__":
     client.loop_start()
     
     #websocket.enableTrace(True)
-    ws = websocket.WebSocketApp("ws://10.0.0.95/ws",
+    ws = websocket.WebSocketApp("ws://"+recip+"/ws",
                               on_open=on_open,
                               on_message=on_message,
                               on_error=on_error,
