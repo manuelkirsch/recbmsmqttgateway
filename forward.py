@@ -73,20 +73,19 @@ def on_message(ws, message):
         result = client.publish("recbms/bms_array/master/soh", jsonData["bms_array"]["master"]["soh"])
 
         for index, slave in enumerate(jsonData["bms_array"]["slave"]):
-            print(slave)
-            result = client.publish("recbms/bms_array/slave/"+str(index)+"/address", slave[str(index)]["address"])
-            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_temp", slave[str(index)]["st_temp"])
-            result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp_bms", slave[str(index)]["temp_bms"])
-            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_celic", slave[str(index)]["st_celic"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/address", jsonData["bms_array"]["slave"][str(index)]["address"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_temp", jsonData["bms_array"]["slave"][str(index)]["st_temp"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp_bms", jsonData["bms_array"]["slave"][str(index)]["temp_bms"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_celic", jsonData["bms_array"]["slave"][str(index)]["st_celic"])
             
-            for tempindex, temp in enumerate(slave["temp"]):
-                result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp/"+str(tempindex), temp)
+            for tempindex, temp in enumerate(jsonData["bms_array"]["slave"][str(index)]["temp"]):
+                result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp/"+str(tempindex), jsonData["bms_array"]["slave"][str(index)]["temp"][str(tempindex)])
 
-            for resindex, res in enumerate(slave["res"]):
-                result = client.publish("recbms/bms_array/slave/"+str(index)+"/res/"+str(resindex), res)
+            for resindex, res in enumerate(jsonData["bms_array"]["slave"][str(index)]["res"]):
+                result = client.publish("recbms/bms_array/slave/"+str(index)+"/res/"+str(resindex), jsonData["bms_array"]["slave"][str(index)]["res"][str(resindex)])
 
-            for napindex, nap in enumerate(slave["nap"]):
-                result = client.publish("recbms/bms_array/slave/"+str(index)+"/nap/"+str(napindex), nap)
+            for napindex, nap in enumerate(jsonData["bms_array"]["slave"][str(index)]["nap"]):
+                result = client.publish("recbms/bms_array/slave/"+str(index)+"/nap/"+str(napindex), jsonData["bms_array"]["slave"][str(index)]["nap"][str(napindex)])
 
         status = result[0]
         if status != 0:
