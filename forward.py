@@ -73,10 +73,11 @@ def on_message(ws, message):
         result = client.publish("recbms/bms_array/master/soh", jsonData["bms_array"]["master"]["soh"])
 
         for index, slave in enumerate(jsonData["bms_array"]["slave"]):
-            result = client.publish("recbms/bms_array/slave/"+str(index)+"/address", slave["address"])
-            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_temp", slave["st_temp"])
-            result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp_bms", slave["temp_bms"])
-            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_celic", slave["st_celic"])
+            print(slave)
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/address", slave[str(index)]["address"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_temp", slave[str(index)]["st_temp"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp_bms", slave[str(index)]["temp_bms"])
+            result = client.publish("recbms/bms_array/slave/"+str(index)+"/st_celic", slave[str(index)]["st_celic"])
             
             for tempindex, temp in enumerate(slave["temp"]):
                 result = client.publish("recbms/bms_array/slave/"+str(index)+"/temp/"+str(tempindex), temp)
