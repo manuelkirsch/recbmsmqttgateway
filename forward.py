@@ -56,7 +56,7 @@ def on_message(ws, message):
     jsonData = json.loads(message)
     if jsonData["type"] == 'status':
         # status message
-        result = client.publish("recbms/status", jsonData["bms_array"])
+        result = client.publish("recbms/status", message)
 
         result = client.publish("rec/bms/soc", jsonData["bms_array"]["master"]["soc"])
         result = client.publish("rec/bms/ibat", jsonData["bms_array"]["master"]["ibat"])
